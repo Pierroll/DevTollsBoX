@@ -1,12 +1,12 @@
 // Aquí puedes agregar funciones de validación para los datos de entrada
 
-const validarHerramienta = (data) => {
-    if (!data.nombre || !data.descripcion) {
+const validateTool = (data) => {
+    if (!data.name || !data.description) {
         return false;
     }
     return true;
 };
 
 module.exports = {
-    validarHerramienta
+    validateTool
 };

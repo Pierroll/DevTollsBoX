@@ -1,42 +1,42 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { connectDB } = require('./db/connection');  // Conexión a la base de datos
-const herramientaRoutes = require('./routes/herramientaRoutes');  // Rutas para herramientas
-const sugerenciaRoutes = require('./routes/sugerenciaRoutes');  // Rutas para sugerencias
+const { connectDB } = require('./db/connection');  // Database connection
+const toolRoutes = require('./routes/toolRoutes');  // Routes for tools
+const suggestionRoutes = require('./routes/suggestionRoutes');  // Routes for suggestions
 
-// Cargar variables de entorno
+// Load environment variables
 dotenv.config();
 
-// Crear la aplicación Express
+// Create the Express application
 const app = express();
 
 // Middleware
-app.use(express.json());  // Para leer JSON en el cuerpo de las peticiones
-app.use(cors());  // Para permitir solicitudes CORS
+app.use(express.json());  // To parse JSON in request bodies
+app.use(cors());  // To allow CORS requests
 
-// Conectar a la base de datos
+// Connect to the database
 connectDB();
 
-// Definir las rutas
-app.use('/api/herramientas', herramientaRoutes);
-app.use('/api/sugerencias', sugerenciaRoutes);
+// Define routes
+app.use('/api/tools', toolRoutes);
+app.use('/api/suggestions', suggestionRoutes);
 
-// Puerto del servidor
+// Server port
 const PORT = process.env.PORT || 5000;
 
-// Iniciar el servidor
+// Start the server
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
 
 const { sequelize } = require('./db/connection');
 
-// Sincronizar modelos con la base de datos
+// Sync models with the database
 sequelize.sync()
     .then(() => {
-        console.log('Modelos sincronizados con la base de datos');
+        console.log('Models synchronized with the database');
     })
     .catch((error) => {
-        console.error('Error al sincronizar los modelos', error);
+        console.error('Error synchronizing models', error);
     });
