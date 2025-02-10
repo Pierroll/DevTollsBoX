@@ -1,42 +1,30 @@
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const { connectDB } = require('./db/connection');  // Database connection
-const toolRoutes = require('./routes/toolRoutes');  // Routes for tools
-const suggestionRoutes = require('./routes/suggestionRoutes');  // Routes for suggestions
+const { connectDB } = require('./db/connection');
 
-// Load environment variables
-dotenv.config();
+// Importación de Rutas
+const categoryRoutes = require('./routes/categoryRoutes');
+const toolRoutes = require('./routes/toolRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');  // ⭐ Rutas de Favoritos
+const likeRoutes = require('./routes/likeRoutes');          // ❤️ Rutas de Likes
+const suggestionRoutes = require('./routes/suggestionRoutes'); // 💡 Rutas de Sugerencias
 
-// Create the Express application
+require('dotenv').config();
+
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-// Middleware
-app.use(express.json());  // To parse JSON in request bodies
-app.use(cors());  // To allow CORS requests
-
-// Connect to the database
+// Conexión a la base de datos
 connectDB();
 
-// Define routes
-app.use('/api/tools', toolRoutes);
-app.use('/api/suggestions', suggestionRoutes);
+// 📦 Uso de las rutas
+app.use('/api/categories', categoryRoutes);   // 📂 Categorías
+app.use('/api/tools', toolRoutes);            // 🛠️ Herramientas
+app.use('/api/favorites', favoriteRoutes);    // ⭐ Favoritos
+app.use('/api/likes', likeRoutes);            // ❤️ Likes
+app.use('/api/suggestions', suggestionRoutes); // 💡 Sugerencias
 
-// Server port
+// 🚀 Iniciar el servidor
 const PORT = process.env.PORT || 5000;
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-const { sequelize } = require('./db/connection');
-
-// Sync models with the database
-sequelize.sync()
-    .then(() => {
-        console.log('Models synchronized with the database');
-    })
-    .catch((error) => {
-        console.error('Error synchronizing models', error);
-    });
+app.listen(PORT, () => console.log(`✅ Servidor corriendo en http://localhost:${PORT}`));

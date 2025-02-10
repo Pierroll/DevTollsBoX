@@ -1,45 +1,24 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db/connection');
+const Category = require('./categoryModel'); // ✅ Importar el modelo de categoría
 
-// Define the tool model
 const Tool = sequelize.define('Tool', {
-    id_tool: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    link: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    category: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-    },
-    rating: {
-        type: DataTypes.DECIMAL(2, 1),  // NUMERIC type in PostgreSQL
-        allowNull: true,
-    },
-    publication_date: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: false,
-    },
-    image: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    }
+    id_tool: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+    link: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT, allowNull: false },
+    category_id: { type: DataTypes.INTEGER, references: { model: 'categories', key: 'id_category' } },
+    likes: { type: DataTypes.INTEGER, defaultValue: 0 },
+    publication_date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    image: { type: DataTypes.STRING },
+    tuto1: { type: DataTypes.TEXT },
+    tuto2: { type: DataTypes.TEXT },
 }, {
-    tableName: 'tools', // Table name in the database
-    timestamps: false,  // If you are not using createdAt/updatedAt fields
+    tableName: 'tools',
+    timestamps: false
 });
+
+// ✅ Relación: Una herramienta pertenece a una categoría
+Tool.belongsTo(Category, { foreignKey: 'category_id', as: 'category' });
 
 module.exports = Tool;
