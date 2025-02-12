@@ -1,10 +1,16 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// Conexión utilizando el URI desde el archivo .env
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
-    logging: false, // Opcional: desactiva los logs de SQL en la consola
+    logging: false,
+    dialectOptions: {
+        ssl: process.env.NODE_ENV === 'production' ? { require: true, rejectUnauthorized: false } : false
+    },
+    define: {
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+    }
 });
 
 const connectDB = async () => {
